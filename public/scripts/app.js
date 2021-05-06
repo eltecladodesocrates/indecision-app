@@ -1,119 +1,86 @@
 'use strict';
 
 console.log('App.js is running');
+var appRoot = document.getElementById('app');
 
 // JSX - JavaScript XML
 
-var text = {
-    title: 'Anibal contra el mundo',
-    subTitle: 'El baston de la urbe',
-    options: ['One', 'Two']
+var app = {
+    title: 'Indecision App',
+    subTitle: 'Put your life in the hands of a computer',
+    options: []
 };
 
-var template = React.createElement(
-    'div',
-    null,
-    React.createElement(
-        'h1',
-        null,
-        text.title
-    ),
-    text.subTitle && React.createElement(
-        'p',
-        null,
-        text.subTitle
-    ),
-    React.createElement(
-        'p',
-        null,
-        text.options.length > 0 ? 'Here are your options' : 'No options'
-    ),
-    React.createElement(
-        'ol',
-        null,
-        React.createElement(
-            'li',
-            null,
-            'Item One'
-        ),
-        React.createElement(
-            'li',
-            null,
-            'Item Two'
-        )
-    )
-);
-
-// const user = {
-//     name: `D'artagnan`,
-//     age: 20,
-//     location: 'New Jersey'
-// }
-
-// const getLocation = (location) => {
-
-//     if (location) {
-//         return <p>Location: {location}</p>
-//     } else {
-//         return undefined
-//     }
-
-// }
-// const templateTwo = (   
-//     <div>
-//         <h1>{user.name ? user.name : 'Anonymous'}</h1>
-//         {(user.age && user.age >= 18) && <p>Age: {user.age}</p>}
-//         {getLocation(user.location)}
-//     </div>
-// )
-
-var count = 0;
-
-var addOne = function addOne() {
-    count++;
-    renderCounterApp();
+var onFormSubmit = function onFormSubmit(e) {
+    e.preventDefault();
+    var option = e.target.elements.option.value;
+    if (option) {
+        app.options.push(option);
+        e.target.elements.option.value = '';
+    }
+    render();
 };
 
-var minusOne = function minusOne() {
-    count--;
-    renderCounterApp();
+var onRemoveAll = function onRemoveAll() {
+    app.options = [];
+    render();
 };
 
-var reset = function reset() {
-    count = 0;
-    renderCounterApp();
-};
+var numbers = [55, 101, 1000];
 
-var appRoot = document.getElementById('app');
-
-var renderCounterApp = function renderCounterApp() {
-    var templateTwo = React.createElement(
+var render = function render() {
+    var template = React.createElement(
         'div',
         null,
         React.createElement(
             'h1',
             null,
-            'Count: ',
-            count
+            app.title
+        ),
+        app.subTitle && React.createElement(
+            'p',
+            null,
+            app.subTitle
+        ),
+        React.createElement(
+            'p',
+            null,
+            app.options.length > 0 ? 'Here are your options' : 'No options'
+        ),
+        React.createElement(
+            'p',
+            null,
+            app.options.length
         ),
         React.createElement(
             'button',
-            { onClick: addOne },
-            '+1'
+            { onClick: onRemoveAll },
+            'Remove All'
         ),
         React.createElement(
-            'button',
-            { onClick: minusOne },
-            '-1'
+            'ol',
+            null,
+            app.options.map(function (option) {
+                return React.createElement(
+                    'li',
+                    { key: option },
+                    option
+                );
+            })
         ),
         React.createElement(
-            'button',
-            { onClick: reset },
-            'Reset'
+            'form',
+            { onSubmit: onFormSubmit },
+            React.createElement('input', { type: 'text', name: 'option' }),
+            React.createElement(
+                'button',
+                null,
+                'Add Option'
+            )
         )
     );
 
-    ReactDOM.render(templateTwo, appRoot);
+    ReactDOM.render(template, appRoot);
 };
 
-renderCounterApp();
+render();
